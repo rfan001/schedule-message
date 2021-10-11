@@ -5,12 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -24,13 +20,22 @@ public class SendMessageService {
         this.messageService = messageService;
     }
 
-    @Scheduled(fixedRate = 5000)
+    private boolean firstRun = true;
+
+    @Scheduled(fixedRate = 1000)
     public void sendMessage() {
-        List<Message> messages = this.messageService.list();
-        for (Message message: messages) {
-            log.info("The time is now {}",message.getPublishTime().format(formatter));
-            log.info("message: {}", message.getContent());
-            this.messageService.changeStatus(message.getMessageId());
+
+        List<Message> messages;
+        if (firstRun) {
+            messages = this.messageService.firstList();
+            firstRun = false;
+        } else {
+            messages = this.messageService.list();
+        }
+        for (Message message : messages) {
+            log.info("Time: {}", message.getPublishTime().format(formatter));
+            log.info("Message: {}", message.getContent());
+            this.messageService.changeStatus(message.getMessageId()); //TODO: update all ids together
         }
     }
 }
