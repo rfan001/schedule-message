@@ -13,6 +13,9 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "message")
+/**
+ * Message Entity
+ */
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +27,10 @@ public class Message {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    private Status status;  // ACTIVE and DONE
 
     @Column(name = "publish_time")
-    private LocalDateTime publishTime;
+    private LocalDateTime publishTime; // format "yyyy-MM-dd HH:mm:ss"
 
     @Column(name = "created_time", updatable=false)
     @CreationTimestamp

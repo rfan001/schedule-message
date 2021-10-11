@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
-public class MessageInfo {
+public class MessageDTO {
     @NotBlank(message = "The message cannot be blank")
     private String message;
 

@@ -17,17 +17,27 @@ public class MessageService {
     public Message save(Message message){
         return messageRepository.save(message);
     }
+
+    /**
+     * find messages which need to be delivered in current second
+     * @return resultList
+     */
     public List<Message> list(){
         List<Message> resultList;
         LocalDateTime now = LocalDateTime.now();
         resultList = this.messageRepository.
                 findAllByStatusAndPublishTimeLessThanEqualAndPublishTimeGreaterThan(
                         Status.ACTIVE,
-                        now.plusSeconds(1L),
-                        now
+                        now,
+                        now.minusSeconds(1L)
                 );
         return resultList;
     }
+
+    /**
+     * find messages which before current second but haven't been sent (e.g. the server down during the scheduled time)
+     * @return resultList
+     */
     public List<Message> firstList(){
         List<Message> resultList;
         LocalDateTime now = LocalDateTime.now();
@@ -38,9 +48,14 @@ public class MessageService {
                 );
         return resultList;
     }
-    public Message changeStatus(Long id){
+
+    /**
+     * change status after log out the messages
+     * @param id
+     */
+    public void changeStatus(Long id){
         Message message = messageRepository.getById(id);
         message.setStatus(Status.DONE);
-        return messageRepository.save(message);
+        messageRepository.save(message);
     }
 }
