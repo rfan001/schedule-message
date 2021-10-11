@@ -4,6 +4,8 @@ import com.iqvia.schedule_message.domain.Message;
 import com.iqvia.schedule_message.domain.MessageDTO;
 import com.iqvia.schedule_message.domain.Status;
 import com.iqvia.schedule_message.service.MessageService;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,7 +17,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-
+@ApiResponses(value = {
+        @ApiResponse(code=400, message="This is a bad request. Please follow the API documentation for proper request."),
+        @ApiResponse(code=500, message="The server is down. Please make sure that the service are running.")
+})
 public class MessageController {
 
     private final MessageService messageService;
